@@ -30,7 +30,7 @@ public class BeverageStockController {
 			@ApiResponse(code = 201, message = "Created")
 	})
 	@PostMapping
-	public ResponseEntity<BeverageStock> create(@Valid @RequestBody BeverageStockDTO beverage){
+	public ResponseEntity<BeverageStock> create( @RequestBody BeverageStock beverage){
 		
 		BeverageStock beverageStock = beverageService.create(beverage);
 		return ResponseEntity.status(HttpStatus.CREATED).body(beverageStock);
