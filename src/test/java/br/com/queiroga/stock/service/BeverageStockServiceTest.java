@@ -16,6 +16,8 @@ import br.com.queiroga.stock.exception.InvalidSectionException;
 import br.com.queiroga.stock.model.BeverageStock;
 import br.com.queiroga.stock.model.BeverageType;
 import br.com.queiroga.stock.model.Section;
+import br.com.queiroga.stock.model.dto.BeverageStockDTO;
+import br.com.queiroga.stock.model.dto.SectionDTO;
 import br.com.queiroga.stock.repository.BeverageStockRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,6 +37,7 @@ class BeverageStockServiceTest {
 	private BeverageStockService beverageStockService;
 	
 	private Section section1;
+	private SectionDTO sectionDTO1;
 
 	
 	@BeforeEach
@@ -71,7 +74,7 @@ class BeverageStockServiceTest {
 	private BeverageStock createBeverageStock(String beverageTypeName, Section section) {
 		return BeverageStock.builder()
 				.type(createBeverageType(beverageTypeName))
-				.section(section).build();
+				.section(section1).build();
 	}
 
 	private BeverageType createBeverageType(String beverageTypeName) {
