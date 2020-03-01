@@ -1,6 +1,6 @@
 package br.com.queiroga.stock.model.dto;
 
-import br.com.queiroga.stock.model.BeverageType;
+import br.com.queiroga.stock.model.Beverage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BeverageStockDTO {
 	
-	private BeverageType type;
+	private Beverage type;
 	
 	private SectionDTO section;
 

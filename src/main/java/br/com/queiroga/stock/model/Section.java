@@ -2,12 +2,14 @@ package br.com.queiroga.stock.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Transient;
 
+import br.com.queiroga.stock.model.enums.BeverageTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,8 +34,14 @@ public class Section {
 	@Column(nullable = false)
 	private Integer spaceUsed;
 	
-	@ManyToOne
-	private BeverageType storedType;
+	@Column
+	@Enumerated
+	private BeverageTypeEnum storedType;
+
+	@Transient
+	public void addVolume(Integer volume) {
+		this.spaceUsed+=volume;
+	}
 	
 }
 
