@@ -1,22 +1,33 @@
 package br.com.queiroga.stock.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
+import javax.validation.Valid;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.queiroga.stock.exception.NotFoundException;
 import br.com.queiroga.stock.model.Beverage;
 import br.com.queiroga.stock.model.Section;
+import br.com.queiroga.stock.model.dto.BeverageStockDTO;
 import br.com.queiroga.stock.model.dto.TotalVolumeDTO;
 import br.com.queiroga.stock.model.enums.BeverageTypeEnum;
 import br.com.queiroga.stock.model.enums.SortEnum;
@@ -41,17 +52,17 @@ public class BeverageController {
 	@ApiOperation(value = "Creates an beverage entry in stock")
 	@ApiResponses(value = {
 			@ApiResponse(code = 201, message = "Created"),
+			@ApiResponse(code = 400, message = "Bad request", responseContainer ="Map", response=java.lang.String.class),
 			@ApiResponse(code = 422, message = "Section not found")
 	})
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Beverage> create(@RequestBody Beverage beverage){
+	public ResponseEntity<Beverage> create(@Valid @RequestBody(required = true) BeverageStockDTO beverage){
 		
-		Beverage beverageStock = beverageService.create(beverage);
+		Beverage beverageStock = beverageService.create(convertToEntity(beverage));
 		return ResponseEntity.status(HttpStatus.CREATED).body(beverageStock);
 		
 	}
 
-	
 	@ApiOperation(value = "List all beverages")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Ok"),
@@ -130,4 +141,25 @@ public class BeverageController {
 		return ResponseEntity.ok(sections);
 		
 	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public Map<String, String> handleValidationExceptions(
+	  MethodArgumentNotValidException ex) {
+	    Map<String, String> errors = new HashMap<>();
+	    ex.getBindingResult().getAllErrors().forEach((error) -> {
+	        String fieldName = ((FieldError) error).getField();
+	        String errorMessage = error.getDefaultMessage();
+	        errors.put(fieldName, errorMessage);
+	    });
+	    return errors;
+	}
+	
+	private Beverage convertToEntity(BeverageStockDTO beverageDTO) {
+		Beverage beverage = new Beverage();
+		BeanUtils.copyProperties(beverageDTO, beverage);
+		beverage.setSection(Section.builder().id(beverageDTO.getSection().getId()).build());
+		return beverage;
+	}
+
 }

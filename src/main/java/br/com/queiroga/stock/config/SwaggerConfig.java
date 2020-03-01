@@ -26,8 +26,8 @@ public class SwaggerConfig {
 
 	  private ApiInfo metaData() {
 		    return new ApiInfoBuilder()
-		        .title("Estoque bebidas API")
-		        .description("API de gerenciamento de estoque")
+		        .title("Beverage stock API")
+		        .description("api for stock management of a beverage warehouse")
 		        .version("1.0.0")
 		        .license("Apache License Version 2.0")
 		        .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0\"")
